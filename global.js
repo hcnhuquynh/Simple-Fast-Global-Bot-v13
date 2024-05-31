@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const globalChannels = [
-    "900785840643530812",
-    "896518442096668732",
+    "1245681386648506480",
+    "1018510208936460399",
     "885783368904609843" //UNAVIALEABLKE CHANNEL
 ]; //define an array of all channels which are a global channel
 //could be a db too...
