@@ -10,7 +10,7 @@ const client = new Discord.Client({
     ],
 });
 //Start the Bot
-client.login(config.token)
+client.login(process.env.token)
 
 //we gotta adjust this, so we only require the file once the bot is ready!
 client.on("ready", () => {
