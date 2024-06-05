@@ -36,7 +36,7 @@ client.on("ready", () => {
 });
 
 // Set the ID of the channel where the game will be played
-const GAME_CHANNEL_ID = '1244302171143671828';
+const GAME_CHANNEL_ID = '1245357473267716137';
 
 client.on("messageCreate", message => {
     if (message.channel.id !== GAME_CHANNEL_ID) return;
