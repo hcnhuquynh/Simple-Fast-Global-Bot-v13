@@ -1,37 +1,76 @@
 const Discord = require("discord.js");
 
-const wordChainChannelId = '1245357473267716137';
-let currentWord = '';
-let usedWords = [];
+class WordChainGame {
+    constructor(channel) {
+        this.channel = channel;
+        this.players = [];
+        this.words = [];
+        this.currentWord = '';
+        this.turn = 0;
+        this.inProgress = false;
+    }
 
-function isValidWord(word) {
-    // Ensure the word has 2 characters and starts with the last character of the previous word
-    return word.length === 4 && (currentWord === '' || word.startsWith(currentWord.slice(-2)));
-}
-
-function startGame(channel) {
-    currentWord = '';
-    usedWords = [];
-    channel.send("Trò chơi nối từ bắt đầu! Hãy nhập từ 2 chữ đầu tiên.");
-}
-
-module.exports = (client) => {
-    client.on('messageCreate', (message) => {
-        if (message.channel.id !== wordChainChannelId || message.author.bot) return;
-
-        const content = message.content.trim();
-        
-        if (content === '!start') {
-            startGame(message.channel);
+    startGame() {
+        if (this.inProgress) {
+            this.channel.send("Trò chơi đã bắt đầu rồi!");
             return;
         }
 
-        if (isValidWord(content) && !usedWords.includes(content)) {
-            usedWords.push(content);
-            currentWord = content;
-            message.channel.send(`Từ "${content}" đã được chấp nhận. Hãy nhập từ tiếp theo bắt đầu bằng "${content.slice(-2)}".`);
-        } else {
-            message.channel.send(`Từ "${content}" không hợp lệ hoặc đã được sử dụng. Hãy thử lại.`);
+        this.inProgress = true;
+        this.channel.send("Trò chơi nối từ đã bắt đầu!");
+
+        // Gửi lời mời đầu tiên
+        this.sendTurnMessage();
+    }
+
+    addPlayer(player) {
+        this.players.push(player);
+    }
+
+    sendTurnMessage() {
+        this.channel.send(`Lượt của ${this.players[this.turn].username}, hãy nối từ với từ cuối cùng là **${this.currentWord}**`);
+    }
+
+    processWord(word) {
+        if (!this.inProgress) return;
+
+        // Kiểm tra xem từ có hợp lệ không
+        if (!this.isValidWord(word)) {
+            this.channel.send("Từ không hợp lệ hoặc đã được sử dụng, vui lòng thử lại!");
+            return;
         }
-    });
-};
+
+        // Kiểm tra xem từ này có bắt đầu bằng ký tự của từ cuối cùng không
+        if (!this.currentWord || word[0] === this.currentWord[this.currentWord.length - 1]) {
+            this.words.push(word);
+            this.currentWord = word;
+            this.turn = (this.turn + 1) % this.players.length;
+            this.sendTurnMessage();
+        } else {
+            this.channel.send("Từ phải bắt đầu bằng ký tự của từ cuối cùng!");
+        }
+    }
+
+    isValidWord(word) {
+        // Kiểm tra từ đã được sử dụng chưa
+        if (this.words.includes(word)) return false;
+
+        // Thêm các quy tắc kiểm tra từ hợp lệ ở đây nếu cần
+        return true;
+    }
+
+    endGame() {
+        this.channel.send("Trò chơi kết thúc!");
+        this.resetGame();
+    }
+
+    resetGame() {
+        this.players = [];
+        this.words = [];
+        this.currentWord = '';
+        this.turn = 0;
+        this.inProgress = false;
+    }
+}
+
+module.exports = WordChainGame;
