@@ -15,10 +15,12 @@ module.exports = client => {
         new Discord.MessageButton().setStyle("LINK").setURL(`https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot`).setLabel("Invite me")
     ]);
 
+    // Now let's start!
+    // By installing the npm modules!
+
     client.on("messageCreate", async message => {
         // Return if a message is received from DMs, or an invalid guild, or from a BOT!
         if (!message.guild || message.guild.available === false || message.author.bot) return;
-
         // If the current channel is a global channel:
         if (globalChannels.includes(message.channel.id)) {
             // The message sending data!
@@ -38,7 +40,7 @@ module.exports = client => {
 
             // If the user sends text, add the content to the EMBED - DESCRIPTION!
             if (message.content) {
-                embed.setDescription(`**Message:**\n\n>>> ${String(message.content).substr(0, 2000)}`)
+                embed.setDescription(`**Message:**\n\n>>> \`\`\`diff\n- ${String(message.content).substr(0, 2000)}\n\`\`\``)
             }
 
             // Check if the message author is a staff member and add an icon if true
@@ -57,16 +59,20 @@ module.exports = client => {
             }
 
             // Now let's do the attachments!
+            let url = "";
+            let imagename = "UNKNOWN";
             if (message.attachments.size > 0) {
-                const attachment = message.attachments.first();
-                if (attachment && attachIsImage(attachment)) {
-                    embed.setImage(attachment.url); // Add the image URL to the embed, so it's displayed correctly
+                if (message.attachments.every(attachIsImage)) {
+                    // Valid Image!!!
+                    const attachment = new Discord.MessageAttachment(url, imagename);
+                    messageData.files = [attachment]; // Add the image file to the message of the BOT
+                    embed.setImage(`attachment://${imagename}`); // Add the image to the embed, so it's inside of it!
                 }
             }
-
             // Function to validate the message attachment image!
             function attachIsImage(msgAttach) {
-                const url = msgAttach.url;
+                url = msgAttach.url;
+                imagename = msgAttach.name || `UNKNOWN`;
                 return url.indexOf("png", url.length - 3) !== -1 || url.indexOf("PNG", url.length - 3) !== -1 ||
                     url.indexOf("jpeg", url.length - 4) !== -1 || url.indexOf("JPEG", url.length - 4) !== -1 ||
                     url.indexOf("gif", url.length - 3) !== -1 || url.indexOf("GIF", url.length - 3) !== -1 ||
@@ -75,15 +81,16 @@ module.exports = client => {
                     url.indexOf("jpg", url.length - 3) !== -1 || url.indexOf("JPG", url.length - 3) !== -1;
             }
 
-            // Add the embed to the message data
+            // We forgot to add the embed, sorry
             messageData.embeds = [embed];
 
             // Now it's time for sending the message(s)
-            // We need to pass in the message and the messageData
+            // We need to pass in the message and the messageData (SORRY)
             sendallGlobal(message, messageData);
         }
     });
 
+    // Yes, we made a mistake!
     // This function is for sending the messages in the global channels
     async function sendallGlobal(message, messageData) {
         message.react("🌐").catch(() => {}); // React with a validate emoji
