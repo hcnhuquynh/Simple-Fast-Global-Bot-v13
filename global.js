@@ -5,7 +5,7 @@ const globalChannels = [
 ]; // Define an array of all channels which are a global channel
 // Could be a DB too...
 
-const staffIds = ["your-staff-id-1", "your-staff-id-2"]; // Replace with actual staff member IDs
+const staffIds = ["1015763488938938388", "1055695302386012212"]; // Replace with actual staff member IDs
 
 module.exports = client => {
     // First some supportive buttons!
