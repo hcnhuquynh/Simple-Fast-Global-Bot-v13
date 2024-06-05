@@ -1,7 +1,7 @@
 const Discord = require("discord.js"); // discord.js v13
 const http = require("http");
 const config = require(`./config.json`);
-const wordChain = require('./wordchain');
+const wordchain = require("./wordchain");
 
 const client = new Discord.Client({
     shards: "auto",
@@ -35,18 +35,17 @@ client.on("ready", () => {
     require("./global.js")(client); // Pass in client to pull the file
 });
 
-client.on('messageCreate', (message) => {
-    if (message.author.bot) return;
+// Set the ID of the channel where the game will be played
+const GAME_CHANNEL_ID = '1244302171143671828';
 
-    const args = message.content.slice(config.prefix.length).trim().split(/ +/);
-    const command = args.shift().toLowerCase();
+client.on("messageCreate", message => {
+    if (message.channel.id !== GAME_CHANNEL_ID) return;
 
-    if (command === 'start') {
-        wordChain.startGame(message);
-    } else if (command === 'end') {
-        wordChain.endGame(message);
+    // Command to start the game
+    if (message.content.toLowerCase() === "!startwordchain") {
+        wordchain.startGame(message.channel);
     } else {
-        wordChain.playGame(message);
+        wordchain.handleWordSubmission(message);
     }
 });
 
