@@ -15,12 +15,10 @@ module.exports = client => {
         new Discord.MessageButton().setStyle("LINK").setURL(`https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot`).setLabel("Invite me")
     ]);
 
-    // Now let's start!
-    // By installing the npm modules!
-
     client.on("messageCreate", async message => {
         // Return if a message is received from DMs, or an invalid guild, or from a BOT!
         if (!message.guild || message.guild.available === false || message.author.bot) return;
+        
         // If the current channel is a global channel:
         if (globalChannels.includes(message.channel.id)) {
             // The message sending data!
@@ -36,11 +34,11 @@ module.exports = client => {
                 .setAuthor(`${message.author.tag}`, message.member.displayAvatarURL({ dynamic: true, size: 256 }), "https://discord.gg/milrato")
                 .setThumbnail(message.member.displayAvatarURL({ dynamic: true, size: 256 })) // Message member could be the USER SERVER SPECIFIC AVATAR too!
                 .setFooter(`${message.guild.name}・${message.guild.memberCount} Members`, message.guild.iconURL({ dynamic: true, size: 256 }))
-                .setTimestamp()
+                .setTimestamp();
 
             // If the user sends text, add the content to the EMBED - DESCRIPTION!
             if (message.content) {
-                embed.setDescription(`**Message:**\n\n>>> ${String(message.content).substr(0, 2000)}`)
+                embed.setDescription(`**Message:**\n\n>>> ${String(message.content).substr(0, 2000)}`);
             }
 
             // Check if the message author is a staff member and add an icon if true
@@ -59,49 +57,43 @@ module.exports = client => {
             }
 
             // Now let's do the attachments!
-            let url = "";
-            let imagename = "UNKNOWN";
             if (message.attachments.size > 0) {
-                if (message.attachments.every(attachIsImage)) {
-                    // Valid Image!!!
-                    const attachment = new Discord.MessageAttachment(url, imagename);
-                    messageData.files = [attachment]; // Add the image file to the message of the BOT
-                    embed.setImage(`attachment://${imagename}`); // Add the image to the embed, so it's inside of it!
-                }
-            }
-            // Function to validate the message attachment image!
-            function attachIsImage(msgAttach) {
-                url = msgAttach.url;
-                imagename = msgAttach.name || `UNKNOWN`;
-                return url.indexOf("png", url.length - 3) !== -1 || url.indexOf("PNG", url.length - 3) !== -1 ||
-                    url.indexOf("jpeg", url.length - 4) !== -1 || url.indexOf("JPEG", url.length - 4) !== -1 ||
-                    url.indexOf("gif", url.length - 3) !== -1 || url.indexOf("GIF", url.length - 3) !== -1 ||
-                    url.indexOf("webp", url.length - 3) !== -1 || url.indexOf("WEBP", url.length - 3) !== -1 ||
-                    url.indexOf("webm", url.length - 3) !== -1 || url.indexOf("WEBM", url.length - 3) !== -1 ||
-                    url.indexOf("jpg", url.length - 3) !== -1 || url.indexOf("JPG", url.length - 3) !== -1;
+                message.attachments.forEach(attachment => {
+                    if (attachIsImage(attachment)) {
+                        embed.setImage(attachment.url); // Add the image to the embed
+                    }
+                });
             }
 
-            // We forgot to add the embed, sorry
+            // Function to validate the message attachment image!
+            function attachIsImage(msgAttach) {
+                const url = msgAttach.url;
+                return url.endsWith("png") || url.endsWith("PNG") ||
+                    url.endsWith("jpeg") || url.endsWith("JPEG") ||
+                    url.endsWith("gif") || url.endsWith("GIF") ||
+                    url.endsWith("webp") || url.endsWith("WEBP") ||
+                    url.endsWith("webm") || url.endsWith("WEBM") ||
+                    url.endsWith("jpg") || url.endsWith("JPG");
+            }
+
+            // Add the embed to the message data
             messageData.embeds = [embed];
 
             // Now it's time for sending the message(s)
-            // We need to pass in the message and the messageData (SORRY)
             sendallGlobal(message, messageData);
         }
     });
 
-    // Yes, we made a mistake!
     // This function is for sending the messages in the global channels
     async function sendallGlobal(message, messageData) {
         message.react("🌐").catch(() => {}); // React with a validate emoji
-        // message.delete().catch(()=>{}) // OR delete the message...
         // Define a not-in-cache channels array;
         let notincachechannels = [];
         // Send the message back in the same guild
         message.channel.send(messageData).then(msg => {
             // Here you could set database information for that message mapped for the message.author
             // so you can register message edits etc.
-        }).catch((O) => {})
+        }).catch((O) => {});
 
         // Loop through all Channels:
         for (const chid of globalChannels) {
@@ -117,16 +109,15 @@ module.exports = client => {
                 channel.send(messageData).then(msg => {
                     // Here you could set database information for that message mapped for the message.author
                     // so you can register message edits etc.
-                }).catch((O) => {})
+                }).catch((O) => {});
             }
         }
 
         // Loop through all NOT CACHED Channels:
         for (const chid of notincachechannels) {
-            // Get the channel in the cache
             let channel = await client.channels.fetch(chid).catch(() => {
                 // Channel = false; // The channel will not exist, so maybe remove it from your DB...
-                console.log(`${chid} is not available!`)
+                console.log(`${chid} is not available!`);
             });
             if (!channel) {
                 continue;
@@ -135,7 +126,7 @@ module.exports = client => {
                 channel.send(messageData).then(msg => {
                     // Here you could set database information for that message mapped for the message.author
                     // so you can register message edits etc.
-                }).catch((O) => {})
+                }).catch((O) => {});
             }
         }
     }
