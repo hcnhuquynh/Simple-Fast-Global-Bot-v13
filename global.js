@@ -5,7 +5,8 @@ const globalChannels = [
 ]; // Define an array of all channels which are a global channel
 
 const staffIds = ["1015763488938938388", "1055695302386012212"]; // Replace with actual staff member IDs
-const partneredServerIds = ["1079700191634014298"]; // Replace with actual partnered server IDs
+const botStaffIds = ["1112683447366991923"]; // Replace with actual staff bot IDs
+const partneredServerIds = ["1245681386648506480"]; // Replace with actual partnered server IDs
 
 module.exports = client => {
     // First some supportive buttons!
@@ -45,6 +46,11 @@ module.exports = client => {
             // Check if the message author is a staff member and add an icon if true
             if (staffIds.includes(message.author.id)) {
                 embed.setDescription(`<a:hg_king:1080873872578064444> ${embed.description}`);
+            }
+
+            // Check if the message author is a staff bot and add an icon if true
+            if (botStaffIds.includes(message.author.id)) {
+                embed.setDescription(`<a:staff:1091010733589930124> ${embed.description}`); // Replace <:bot_staff_icon:123456789012345678> with your actual emoji
             }
 
             // Check if the message is from a partnered server and add an icon if true
