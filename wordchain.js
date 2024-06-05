@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 
-const wordChainChannelId = '1244302171143671828';
+const wordChainChannelId = '1245357473267716137';
 let currentWord = '';
 let usedWords = [];
 
@@ -21,7 +21,7 @@ module.exports = (client) => {
 
         const content = message.content.trim();
         
-        if (content === '!bắt đầu') {
+        if (content === '!start') {
             startGame(message.channel);
             return;
         }
