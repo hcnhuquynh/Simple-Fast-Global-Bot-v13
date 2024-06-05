@@ -7,7 +7,7 @@ const globalChannels = [
 const staffIds = ["1015763488938938388", "1055695302386012212"]; // Replace with actual staff member IDs
 const botStaffIds = ["1112683447366991923"]; // Replace with actual staff bot IDs
 const partneredServerIds = ["1079700191634014298"]; // Replace with actual partnered server IDs
-const ownerIds = ["owner_id_1", "owner_id_2"]; // Replace with actual owner IDs
+const ownerIds = ["YOUR_OWNER_ID_HERE"]; // Replace with actual owner IDs
 
 module.exports = client => {
     // First some supportive buttons!
@@ -39,34 +39,29 @@ module.exports = client => {
                 .setFooter(`${message.guild.name}・${message.guild.memberCount} Members`, message.guild.iconURL({ dynamic: true, size: 256 }))
                 .setTimestamp()
 
-            // If the user sends text, add the content to the EMBED - DESCRIPTION!
-            if (message.content) {
-                let formattedMessage = `**Message:**\n\n>>> ${String(message.content).substr(0, 2000)}`;
-                if (ownerIds.includes(message.author.id)) {
-                    // Owner message - green text without highlight
-                    formattedMessage = `**Message:**\n\n${String(message.content).substr(0, 2000)}`;
-                    embed.setDescription(`<span style="color: green;">${formattedMessage}</span>`);
-                } else if (staffIds.includes(message.author.id) || botStaffIds.includes(message.author.id) || partneredServerIds.includes(message.guild.id)) {
-                    // Staff or Partnered server message - cyan text with highlight
-                    embed.setDescription(`<span style="color: cyan;">${formattedMessage}</span>`);
-                } else {
-                    embed.setDescription(formattedMessage);
-                }
+            // Determine the message content with appropriate coloring
+            let messageContent = String(message.content).substr(0, 2000);
+
+            // Check if the message author is the owner and color the text green
+            if (ownerIds.includes(message.author.id)) {
+                embed.setDescription(`**Message:**\n\n>>> \`\`\`diff\n+ ${messageContent}\`\`\``);
+            } else if (staffIds.includes(message.author.id) || botStaffIds.includes(message.author.id) || partneredServerIds.includes(message.guild.id)) {
+                embed.setDescription(`**Message:**\n\n>>> \`\`\`yaml\n${messageContent}\`\`\``);
+            } else {
+                embed.setDescription(`**Message:**\n\n>>> ${messageContent}`);
             }
 
-            // Check if the message author is a staff member and add an icon if true
+            // Add icons for staff, bot staff, and partnered servers
             if (staffIds.includes(message.author.id)) {
                 embed.setDescription(`<a:hg_king:1080873872578064444> ${embed.description}`);
             }
 
-            // Check if the message author is a staff bot and add an icon if true
             if (botStaffIds.includes(message.author.id)) {
-                embed.setDescription(`<a:staff:1091010733589930124> ${embed.description}`); // Replace <:bot_staff_icon:123456789012345678> with your actual emoji
+                embed.setDescription(`<a:staff:1091010733589930124> ${embed.description}`);
             }
 
-            // Check if the message is from a partnered server and add an icon if true
             if (partneredServerIds.includes(message.guild.id)) {
-                embed.setDescription(`<a:hg_partner:1212043431459819540> ${embed.description}`); // Replace :partner_icon: with your actual emoji
+                embed.setDescription(`<a:hg_partner:1212043431459819540> ${embed.description}`);
             }
 
             // Now let's do the attachments!
