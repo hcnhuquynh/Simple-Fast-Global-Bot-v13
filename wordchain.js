@@ -1,6 +1,6 @@
 module.exports = (client) => {
     let currentWord = '';
-    const gameChannelId = 'YOUR_CHANNEL_ID_HERE'; // Replace with your channel ID
+    const gameChannelId = '1244302171143671828'; // Replace with your channel ID
 
     client.on('messageCreate', message => {
         if (message.channel.id !== gameChannelId || message.author.bot) return;
