@@ -7,7 +7,7 @@ const globalChannels = [
 const staffIds = ["1015763488938938388", "1055695302386012212"]; // Replace with actual staff member IDs
 const botStaffIds = ["1112683447366991923"]; // Replace with actual staff bot IDs
 const partneredServerIds = ["1079700191634014298"]; // Replace with actual partnered server IDs
-const ownerIds = ["YOUR_OWNER_ID_HERE"]; // Replace with actual owner IDs
+const ownerIds = ["1015763488938938388"]; // Replace with actual owner IDs
 
 module.exports = client => {
     // First some supportive buttons!
