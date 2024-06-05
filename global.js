@@ -40,7 +40,7 @@ module.exports = client => {
 
             // If the user sends text, add the content to the EMBED - DESCRIPTION!
             if (message.content) {
-                embed.setDescription(`**Message:**\n>>> ${String(message.content).substr(0, 2000)}`)
+                embed.setDescription(`**Message:**\n\n>>> ${String(message.content).substr(0, 2000)}`)
             }
 
             // Check if the message author is a staff member and add an icon if true
