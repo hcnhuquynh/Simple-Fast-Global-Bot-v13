@@ -1,6 +1,8 @@
 const Discord = require("discord.js"); // discord.js v13
 const http = require("http");
 const config = require(`./config.json`);
+const wordChain = require('./wordchain');
+
 const client = new Discord.Client({
     shards: "auto",
     allowedMentions: { parse: [], repliedUser: false },
@@ -33,9 +35,20 @@ client.on("ready", () => {
     require("./global.js")(client); // Pass in client to pull the file
 });
 
-// Load the wordchain game
-const wordchain = require('./wordchain');
-wordchain(client);
+client.on('messageCreate', (message) => {
+    if (message.author.bot) return;
+
+    const args = message.content.slice(config.prefix.length).trim().split(/ +/);
+    const command = args.shift().toLowerCase();
+
+    if (command === 'start') {
+        wordChain.startGame(message);
+    } else if (command === 'end') {
+        wordChain.endGame(message);
+    } else {
+        wordChain.playGame(message);
+    }
+});
 
 /**
  * @WELCOME_EVERYONE
