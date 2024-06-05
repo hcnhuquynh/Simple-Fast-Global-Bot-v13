@@ -1,35 +1,37 @@
-// wordchain.js
 const Discord = require("discord.js");
 
-const games = new Map(); // Store game states here
+const wordChainChannelId = '1244302171143671828';
+let currentWord = '';
+let usedWords = [];
 
-// Function to start a new game
+function isValidWord(word) {
+    // Ensure the word has 2 characters and starts with the last character of the previous word
+    return word.length === 4 && (currentWord === '' || word.startsWith(currentWord.slice(-2)));
+}
+
 function startGame(channel) {
-    games.set(channel.id, {
-        lastWord: null,
-        players: new Map(),
+    currentWord = '';
+    usedWords = [];
+    channel.send("Trò chơi nối từ bắt đầu! Hãy nhập từ 2 chữ đầu tiên.");
+}
+
+module.exports = (client) => {
+    client.on('messageCreate', (message) => {
+        if (message.channel.id !== wordChainChannelId || message.author.bot) return;
+
+        const content = message.content.trim();
+        
+        if (content === '!bắt đầu') {
+            startGame(message.channel);
+            return;
+        }
+
+        if (isValidWord(content) && !usedWords.includes(content)) {
+            usedWords.push(content);
+            currentWord = content;
+            message.channel.send(`Từ "${content}" đã được chấp nhận. Hãy nhập từ tiếp theo bắt đầu bằng "${content.slice(-2)}".`);
+        } else {
+            message.channel.send(`Từ "${content}" không hợp lệ hoặc đã được sử dụng. Hãy thử lại.`);
+        }
     });
-    channel.send("Trò chơi nối từ đã bắt đầu! Hãy nhập từ đầu tiên.");
-}
-
-// Function to handle word submissions
-function handleWordSubmission(message) {
-    const game = games.get(message.channel.id);
-    if (!game) return;
-
-    const { content, author } = message;
-    const lastWord = game.lastWord;
-
-    if (!lastWord || content.startsWith(lastWord[lastWord.length - 1])) {
-        game.lastWord = content;
-        game.players.set(author.id, (game.players.get(author.id) || 0) + 1);
-        message.channel.send(`Từ "${content}" đã được chấp nhận! Từ tiếp theo phải bắt đầu bằng chữ "${content[content.length - 1]}".`);
-    } else {
-        message.channel.send(`Từ "${content}" không hợp lệ! Phải bắt đầu bằng chữ "${lastWord[lastWord.length - 1]}".`);
-    }
-}
-
-module.exports = {
-    startGame,
-    handleWordSubmission,
 };
