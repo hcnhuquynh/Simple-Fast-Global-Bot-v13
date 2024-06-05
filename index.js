@@ -1,7 +1,6 @@
 const Discord = require("discord.js"); // discord.js v13
 const http = require("http");
 const config = require(`./config.json`);
-
 const client = new Discord.Client({
     shards: "auto",
     allowedMentions: { parse: [], repliedUser: false },
@@ -33,6 +32,10 @@ client.on("ready", () => {
     // First we need to require the global.js file which we're going to create!
     require("./global.js")(client); // Pass in client to pull the file
 });
+
+// Load the wordchain game
+const wordchain = require('./wordchain');
+wordchain(client);
 
 /**
  * @WELCOME_EVERYONE
