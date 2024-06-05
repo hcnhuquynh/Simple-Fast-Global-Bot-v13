@@ -1,11 +1,11 @@
 const Discord = require("discord.js");
 const globalChannels = [
     "1245681386648506480",
-    "1216985264069541932" //UNAVAILABLE CHANNEL
+    "1216985264069541932" // UNAVAILABLE CHANNEL
 ]; // Define an array of all channels which are a global channel
-// Could be a DB too...
 
 const staffIds = ["1015763488938938388", "1055695302386012212"]; // Replace with actual staff member IDs
+const partneredServerIds = ["1079700191634014298"]; // Replace with actual partnered server IDs
 
 module.exports = client => {
     // First some supportive buttons!
@@ -45,6 +45,11 @@ module.exports = client => {
             // Check if the message author is a staff member and add an icon if true
             if (staffIds.includes(message.author.id)) {
                 embed.setDescription(`<a:hg_king:1080873872578064444> ${embed.description}`);
+            }
+
+            // Check if the message is from a partnered server and add an icon if true
+            if (partneredServerIds.includes(message.guild.id)) {
+                embed.setDescription(`<a:hg_partner:1212043431459819540> ${embed.description}`); // Replace :partner_icon: with your actual emoji
             }
 
             // Now let's do the attachments!
