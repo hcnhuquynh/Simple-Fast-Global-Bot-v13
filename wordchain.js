@@ -1,67 +1,35 @@
-const { MessageEmbed } = require('discord.js');
+// wordchain.js
+const Discord = require("discord.js");
 
-let activeGames = {}; // Store active games by channel ID
+const games = new Map(); // Store game states here
 
-module.exports = (client) => {
-    client.on('messageCreate', async (message) => {
-        if (message.author.bot) return;
-
-        const prefix = '!'; // You can change this to any prefix you want
-
-        if (!message.content.startsWith(prefix)) return;
-
-        const args = message.content.slice(prefix.length).trim().split(/ +/);
-        const command = args.shift().toLowerCase();
-
-        if (command === 'startwordchain') {
-            if (activeGames[message.channel.id]) {
-                return message.reply('A game is already in progress in this channel!');
-            }
-            activeGames[message.channel.id] = {
-                lastWord: null,
-                player: null
-            };
-            return message.channel.send('Word chain game started! Type a word to begin.');
-        }
-
-        if (command === 'endwordchain') {
-            if (!activeGames[message.channel.id]) {
-                return message.reply('There is no active game in this channel!');
-            }
-            delete activeGames[message.channel.id];
-            return message.channel.send('Word chain game ended!');
-        }
-
-        if (activeGames[message.channel.id]) {
-            const game = activeGames[message.channel.id];
-            const word = message.content.trim().toLowerCase();
-
-            // If no last word, start the chain
-            if (!game.lastWord) {
-                game.lastWord = word;
-                game.player = message.author.id;
-                return message.channel.send(`Starting word chain with: **${word}**`);
-            }
-
-            // Check if the word is valid
-            if (word.length === 0) {
-                return message.reply('Please provide a valid word.');
-            }
-
-            if (game.player === message.author.id) {
-                return message.reply('Wait for another player to respond!');
-            }
-
-            const lastWord = game.lastWord.split(' ');
-            const newWord = word.split(' ');
-
-            if (lastWord[lastWord.length - 1] !== newWord[0]) {
-                return message.reply(`Invalid word! The word should start with **${lastWord[lastWord.length - 1]}**`);
-            }
-
-            game.lastWord = word;
-            game.player = message.author.id;
-            return message.channel.send(`Next word: **${word}**`);
-        }
+// Function to start a new game
+function startGame(channel) {
+    games.set(channel.id, {
+        lastWord: null,
+        players: new Map(),
     });
+    channel.send("Trò chơi nối từ đã bắt đầu! Hãy nhập từ đầu tiên.");
+}
+
+// Function to handle word submissions
+function handleWordSubmission(message) {
+    const game = games.get(message.channel.id);
+    if (!game) return;
+
+    const { content, author } = message;
+    const lastWord = game.lastWord;
+
+    if (!lastWord || content.startsWith(lastWord[lastWord.length - 1])) {
+        game.lastWord = content;
+        game.players.set(author.id, (game.players.get(author.id) || 0) + 1);
+        message.channel.send(`Từ "${content}" đã được chấp nhận! Từ tiếp theo phải bắt đầu bằng chữ "${content[content.length - 1]}".`);
+    } else {
+        message.channel.send(`Từ "${content}" không hợp lệ! Phải bắt đầu bằng chữ "${lastWord[lastWord.length - 1]}".`);
+    }
+}
+
+module.exports = {
+    startGame,
+    handleWordSubmission,
 };
