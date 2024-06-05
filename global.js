@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 const globalChannels = [
     "1245681386648506480",
     "1216985264069541932" // UNAVAILABLE CHANNEL
-]; // Define an array of all channels which are a global channel
+]; // Define an array of all channels which are global channels
 
 const staffIds = ["1015763488938938388", "1055695302386012212"]; // Replace with actual staff member IDs
 const botStaffIds = ["1112683447366991923"]; // Replace with actual staff bot IDs
@@ -33,7 +33,7 @@ module.exports = client => {
 
             // Define the embed for sending into the channels
             const embed = new Discord.MessageEmbed()
-                .setColor("BLURPLE")
+                .setColor(getRandomColor())
                 .setAuthor(`${message.author.tag}`, message.member.displayAvatarURL({ dynamic: true, size: 256 }), "https://discord.gg/milrato")
                 .setThumbnail(message.member.displayAvatarURL({ dynamic: true, size: 256 })) // Message member could be the USER SERVER SPECIFIC AVATAR too!
                 .setFooter(`${message.guild.name}・${message.guild.memberCount} Members`, message.guild.iconURL({ dynamic: true, size: 256 }))
@@ -127,32 +127,4 @@ module.exports = client => {
             }
         }
 
-        // Loop through all NOT CACHED Channels:
-        for (const chid of notincachechannels) {
-            // Get the channel in the cache
-            let channel = await client.channels.fetch(chid).catch(() => {
-                // Channel = false; // The channel will not exist, so maybe remove it from your DB...
-                console.log(`${chid} is not available!`)
-            });
-            if (!channel) {
-                continue;
-            }
-            if (channel.guild.id != message.guild.id) {
-                channel.send(messageData).then(msg => {
-                    // Here you could set database information for that message mapped for the message.author
-                    // so you can register message edits etc.
-                }).catch((O) => {})
-            }
-        }
-    }
-}
-
-/**
- * @INFO
- * Bot Coded by Tomato#6966 | https://discord.gg/milrato
- * @INFO
- * Work for Milrato Development | https://milrato.eu
- * @INFO
- * Please mention Him / Milrato Development, when using this Code!
- * @INFO
- */
+        // Loop through all NOT CACHED Channels
