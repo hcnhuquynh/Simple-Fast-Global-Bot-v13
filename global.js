@@ -55,6 +55,9 @@ module.exports = client => {
             if (staffIds.includes(message.author.id)) {
                 embed.setDescription(`<a:hg_king:1080873872578064444> ${embed.description}`);
             }
+            if (ownerIds.includes(message.author.id)) {
+                embed.setDescription(`<a:hg_king:1080873872578064444> ${embed.description}`);
+            }
 
             if (botStaffIds.includes(message.author.id)) {
                 embed.setDescription(`<a:staff:1091010733589930124> ${embed.description}`);
