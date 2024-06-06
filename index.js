@@ -1,7 +1,6 @@
-const Discord = require("discord.js");
+const Discord = require("discord.js"); // discord.js v13
 const http = require("http");
 const config = require(`./config.json`);
-const WordChainGame = require("./wordchain.js");
 
 const client = new Discord.Client({
     shards: "auto",
@@ -28,38 +27,30 @@ server.listen(PORT, () => {
     console.log(`HTTP server listening on port ${PORT}`);
 });
 
-// Store game instances for each channel
-const games = new Map();
-
+// We gotta adjust this, so we only require the file once the bot is ready!
 client.on("ready", () => {
     console.log(`Logged in as ${client.user.tag}`);
+    // First we need to require the global.js file which we're going to create!
+    require("./global.js")(client); // Pass in client to pull the file
 });
 
-client.on("messageCreate", async (message) => {
-    // Chỉ xử lý tin nhắn trong kênh quy định
-    if (message.channel.id !== '1245357473267716137') return;
+/**
+ * @WELCOME_EVERYONE
+ * I AM BACK!
+ * Sad news... I updated to Windows 11 and now...
+ * my mic is not working anymore... but I don't want to stop making tutorials so here we go!
+ * A FAST AND SIMPLE GLOBAL BOT TUTORIAL!
+ * 
+ * I set up an index file with base data and a config.json with the token and prefix (which we won't need)
+ * CODE WILL BE ON: https://github.com/Tomato6966/Simple-Fast-Global-Bot-v13
+ */
 
-    // Tạo một trò chơi mới nếu chưa có
-    if (!games.has(message.channel.id)) {
-        games.set(message.channel.id, new WordChainGame(message.channel));
-    }
-
-    const game = games.get(message.channel.id);
-
-    // Bắt đầu trò chơi nếu có lệnh
-    if (message.content === '!start') {
-        game.startGame();
-        return;
-    }
-
-    // Xử lý từ nối
-    if (game.inProgress && message.author.bot === false) {
-        game.processWord(message.content.trim());
-    }
-
-    // Kết thúc trò chơi
-    if (message.content === '!end') {
-        game.endGame();
-        games.delete(message.channel.id);
-    }
-});
+/**
+ * @INFO
+ * Bot Coded by Tomato#6966 | https://discord.gg/milrato
+ * @INFO
+ * Work for Milrato Development | https://milrato.eu
+ * @INFO
+ * Please mention Him / Milrato Development, when using this Code!
+ * @INFO
+ */
