@@ -18,8 +18,11 @@ module.exports = client => {
         new Discord.MessageButton().setStyle("LINK").setURL(`https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot`).setLabel("Invite me")
     ]);
 
-    // Now let's start!
-    // By installing the npm modules!
+    // Helper function to get a random color
+    function getRandomColor() {
+        const colors = ["RED", "GREEN", "BLUE", "YELLOW", "PURPLE", "ORANGE", "PINK"];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
 
     client.on("messageCreate", async message => {
         // Return if a message is received from DMs, or an invalid guild, or from a BOT!
@@ -35,7 +38,7 @@ module.exports = client => {
 
             // Define the embed for sending into the channels
             const embed = new Discord.MessageEmbed()
-                .setColor("BLURPLE")
+                .setColor(getRandomColor())
                 .setAuthor(`${message.author.tag}`, message.member.displayAvatarURL({ dynamic: true, size: 256 }), "https://discord.gg/milrato")
                 .setThumbnail(message.member.displayAvatarURL({ dynamic: true, size: 256 })) // Message member could be the USER SERVER SPECIFIC AVATAR too!
                 .setFooter(`${message.guild.name}・${message.guild.memberCount} Members`, message.guild.iconURL({ dynamic: true, size: 256 }))
