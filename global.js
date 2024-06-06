@@ -2,12 +2,12 @@ const Discord = require("discord.js");
 const globalChannels = [
     "1245681386648506480",
     "1216985264069541932" // UNAVAILABLE CHANNEL
-]; // Define an array of all channels which are global channels
+]; // Define an array of all channels which are a global channel
 
 const staffIds = ["1015763488938938388", "1055695302386012212"]; // Replace with actual staff member IDs
 const botStaffIds = ["1112683447366991923"]; // Replace with actual staff bot IDs
 const partneredServerIds = ["1079700191634014298"]; // Replace with actual partnered server IDs
-const ownerIds = ["1143200917097808044"]; // Replace with actual owner IDs
+const ownerIds = ["YOUR_OWNER_ID_HERE"]; // Replace with actual owner IDs
 
 module.exports = client => {
     // First some supportive buttons!
@@ -16,11 +16,8 @@ module.exports = client => {
         new Discord.MessageButton().setStyle("LINK").setURL(`https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot`).setLabel("Invite me")
     ]);
 
-    // Helper function to get a random color
-    function getRandomColor() {
-        const colors = ["RED", "GREEN", "BLUE", "YELLOW", "PURPLE", "ORANGE", "PINK"];
-        return colors[Math.floor(Math.random() * colors.length)];
-    }
+    // Now let's start!
+    // By installing the npm modules!
 
     client.on("messageCreate", async message => {
         // Return if a message is received from DMs, or an invalid guild, or from a BOT!
@@ -36,7 +33,7 @@ module.exports = client => {
 
             // Define the embed for sending into the channels
             const embed = new Discord.MessageEmbed()
-                .setColor(getRandomColor())
+                .setColor("BLURPLE")
                 .setAuthor(`${message.author.tag}`, message.member.displayAvatarURL({ dynamic: true, size: 256 }), "https://discord.gg/milrato")
                 .setThumbnail(message.member.displayAvatarURL({ dynamic: true, size: 256 })) // Message member could be the USER SERVER SPECIFIC AVATAR too!
                 .setFooter(`${message.guild.name}・${message.guild.memberCount} Members`, message.guild.iconURL({ dynamic: true, size: 256 }))
