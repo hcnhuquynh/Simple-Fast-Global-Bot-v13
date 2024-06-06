@@ -55,6 +55,9 @@ module.exports = client => {
 
             // Add icons for staff, bot staff, and partnered servers
             if (staffIds.includes(message.author.id)) {
+                embed.setDescription(`<a:hc_Moderator:1094886268942422097> ${embed.description}`);
+            }
+            if (ownerIds.includes(message.author.id)) {
                 embed.setDescription(`<a:hg_king:1080873872578064444> ${embed.description}`);
             }
 
