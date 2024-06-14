@@ -3,7 +3,8 @@ const globalChannels = [
     "1248167957880766535",
     "1246382467276079135",
     "1247852737631354892",
-    "1247891607341236234"// UNAVAILABLE CHANNEL
+    "1247891607341236234",
+    "1251189005119127674"// UNAVAILABLE CHANNEL
 ]; // Define an array of all channels which are a global channel
 
 const staffIds = ["1055695302386012212", "948220309176221707"]; // Replace with actual staff member IDs
