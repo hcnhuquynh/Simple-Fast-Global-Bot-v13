@@ -1,7 +1,6 @@
 const Discord = require("discord.js");
 const globalChannels = [
     "1248167957880766535",
-    "1246382467276079135", 
     "1247852737631354892",
     "1247891607341236234"// UNAVAILABLE CHANNEL
 ]; // Define an array of all channels which are a global channel
@@ -14,7 +13,7 @@ const ownerIds = ["1015763488938938388", "1242330820677603359", "115762975374285
 module.exports = client => {
     // First some supportive buttons!
     let buttonrow = new Discord.MessageActionRow().addComponents([
-        new Discord.MessageButton().setStyle("LINK").setURL("https://discord.gg/p8Ctsm4z6R").setLabel("Support Server"),
+        new Discord.MessageButton().setStyle("LINK").setURL("https://discord.gg/cat-curious-1003698094187216898").setLabel("Support Server"),
         new Discord.MessageButton().setStyle("LINK").setURL(`https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot`).setLabel("Invite me")
     ]);
 
